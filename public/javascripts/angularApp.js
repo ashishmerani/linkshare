@@ -190,7 +190,7 @@ angular.module("linkShare", ["ui.router", "ngMessages", "ngStorage"])
                     .success(function(data, status) {
                         console.log(status);
                         if (status === 200) {
-                            //angular.element("#loginfooter").addClass("toggleDiv");
+                            
 
                             $localStorage.user = $scope.lsusernamelgn;
                             $localStorage.logedin = true;
