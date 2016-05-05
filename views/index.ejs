@@ -1,0 +1,394 @@
+<html>
+
+<head>
+    <title>linkShare</title>
+    <script src="javascripts/jquery-1.12.3.min.js "></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular.min.js"></script>-->
+    <script type="text/javascript" src="javascripts/angular.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
+
+    <script src="javascripts/angularApp.js"></script>
+    <style>
+        .glyphicon-thumbs-up {
+            cursor: pointer
+        }
+    </style>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="stylesheets/agency.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.1/angular-messages.js"></script>
+</head>
+
+<body ng-app="linkShare" id="page-top" class="index">
+
+    <nav ng-controller="modalController" class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">linkShare</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#post">Post!</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#allposts">All Posts</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#popular">Most Popular</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#disliked">Most Disliked</a>
+                    </li>
+                    <li>
+                        <a href="#" ng-cloak>
+                            <span class="glyphicon glyphicon-user"></span>{{currentusr}}
+                        </a>
+                    </li>
+                    <li ng-hide="logged" ng-cloak>
+                        <a data-toggle="modal" href="#login" data-target="#loginModal">Login</a>
+                    </li>
+                    <li ng-hide="logged" ng-cloak>
+                        <a data-toggle="modal" href="#signup" data-target="#signupModal">SignUp</a>
+                    </li>
+                    <li ng-show="logged" ng-click="logout()" ng-cloak>
+                        <a class="btn">
+                            <span class="glyphicon glyphicon-log-out"></span> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- Header for Welcome message -->
+    <header>
+
+        <div class="intro-text">
+            <div class="intro-lead-in">Welcome To linkShare!</div>
+            <div class="intro-heading">Share your links now!</div>
+            <a href="#post" class="page-scroll btn btn-xl">Post</a>
+        </div>
+
+    </header>
+
+    <!-- Post Section -->
+    <script type="text/ng-template" id="/home.html">
+        <section id="post">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-md-8 col-md-offset-2">
+                        <ui-view></ui-view>
+
+                        <div ng-app="ngMessages">
+
+
+                            <form name="addpostform" ng-submit="addPost()" style="margin-top:30px;">
+                                <h3>Add a new post</h3>
+
+                                <div class="form-group">
+                                    <input type="text" name="title" class="form-control" placeholder="Title" ng-model="title" ng-minlength="4" ng-maxlength="45" required></input>
+                                    <!--    <span style="color:red" ng-show="addpostform.title.$touched && addpostform.title.$invalid">A Post without a title? Not fair :(</span> -->
+                                </div>
+                                <div class="form-group">
+                                    <input type="url" name="link" class="form-control" placeholder="Link" ng-model="postlink" ng-minlength="4" ng-maxlength="150" required></input>
+                                    <!--            <span style="color:red" ng-show="addpostform.link.$touched && addpostform.link.$invalid">Oops! No link? It might be on Clipboard. Just Ctrl+v :D</span> -->
+                                </div>
+                                <button type="submit" ng-disabled="addpostform.title.$untouched && addpostform.link.$untouched" class="btn btn-primary">Submit</button>
+
+                                <div ng-messages="addpostform.title.$error" ng-show="addpostform.title.$dirty || addpostform.title.$touched">
+                                    <div ng-message="required ">Please Enter title for the post</div>
+                                    <div ng-message="minlength ">Your title should be atleast of 4 characters</div>
+                                    <div ng-message="maxlength ">Your title should can not be more than 45 characters</div>
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+
+        </section>
+
+        <section id="allposts" class="bg-light-gray ">
+
+            <div class="container ">
+                <div class="row ">
+                    <div class="col-xs-12 col-md-8 col-md-offset-2 ">
+
+                        <h1> All posts</h1>
+                        <div ng-repeat="post in posts | orderBy: '-upvotes' ">
+
+
+                            <span class="glyphicon glyphicon-thumbs-up btn btn-default btn-lg " ng-click="incrementUpvotes(post) "></span> {{post.upvotes}}
+                            <span class="glyphicon glyphicon-thumbs-down btn btn-default btn-lg " ng-click="decrementdownvotes(post) "></span> {{post.downvotes}}
+
+                            <span style="font-size:20px; margin-left:60px; ">
+                    <a ng-show="post.link " href = "{{post.link}} ">
+                        {{post.title}}
+                    </a>
+                    <span ng-hide="post.link ">
+                        {{post.title}}
+                    </span>
+                            <br />
+                            <span id="commentStyle ">
+                        <a href="#/posts/{{post._id}} ">Comments</a>
+                    </span>
+
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="popular">
+
+            <div class="container ">
+                <div class="row ">
+                    <div class="col-xs-12 col-md-8 col-md-offset-2 ">
+
+                        <h1> Most Popular posts</h1>
+                        <div ng-repeat="post in posts | orderBy: '-upvotes' ">
+
+
+                            <span class="glyphicon glyphicon-thumbs-up btn btn-default btn-lg " ng-click="incrementUpvotes(post) "></span> {{post.upvotes}}
+                            <span style="font-size:20px; margin-left:60px; ">
+                    <a ng-show="post.link " href = "{{post.link}} ">
+                        {{post.title}}
+                    </a>
+                    <span ng-hide="post.link ">
+                        {{post.title}}
+                    </span>
+                            <br />
+                            <span id="commentStyle ">
+                        <a href="#/posts/{{post._id}} ">Comments</a>
+                    </span>
+
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="disliked" class="bg-light-gray ">
+
+            <div class="container ">
+                <div class="row ">
+                    <div class="col-xs-12 col-md-8 col-md-offset-2 ">
+
+                        <h1> Most Disliked posts</h1>
+                        <div ng-repeat="post in posts | orderBy: '-downvotes' ">
+
+                            <span class="glyphicon glyphicon-thumbs-down btn btn-default btn-lg " ng-click="decrementdownvotes(post) "></span> {{post.downvotes}}
+
+                            <span style="font-size:20px; margin-left:60px; ">
+                    <a ng-show="post.link " href = "{{post.link}} ">
+                        {{post.title}}
+                    </a>
+                    <span ng-hide="post.link ">
+                        {{post.title}}
+                    </span>
+                            <br />
+                            <span id="commentStyle ">
+                        <a href="#/posts/{{post._id}} ">Comments</a>
+                    </span>
+
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </script>
+
+    <div class="row ">
+        <!--    <div class="col-md-6 col-md-offset-3 ">  -->
+        <ui-view></ui-view>
+        <!--    </div>   -->
+    </div>
+
+
+
+    <script type="text/ng-template " id="/posts.html ">
+        <div class="container ">
+            <div class="row ">
+                <div class="col-xs-12 col-md-8 col-md-offset-2 ">
+                    <div class="page-header ">
+                        <h3>
+                    <a ng-show="post.link " href="{{post.link}} ">
+                        {{post.title}}
+                    </a>
+                    <span ng-hide="post.link ">
+                    {{post.title}}
+                    </span>
+                </h3>
+                    </div>
+
+                    <!-- Display posts order by upvotes -->
+                    <div ng-repeat="comment in post.comments | orderBy: '-upvotes' ">
+                        <span class="glyphicon glyphicon-thumbs-up " ng-click="incrementUpvotes(comment) "></span> {{comment.upvotes}} - by {{comment.author}}
+                        <span style="font-size:20px; margin-left:10px; ">
+                {{comment.body}}
+                </span>
+                    </div>
+
+                    <form ng-submit="addComment() " style="margin-top:30px; ">
+                        <h3>Add a new comment</h3>
+
+                        <div class="form-group ">
+                            <input type="text " class="form-control " placeholder="Comment " ng-model="body "></input>
+                        </div>
+                        <button type="submit " class="btn btn-primary ">Post</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <div ng-controller="modalController ">
+        <!-- login Modal -->
+        <div class="modal fade" id="loginModal" role="dialog">
+            <div class="modal-dialog ">
+
+                <!-- login Modal content-->
+                <div class="modal-content ">
+                    <div class="modal-header ">
+                        <button id="loginclose" type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title ">Login</h4>
+                    </div>
+                    <div class="modal-body ">
+                        <form class="form-horizontal ">
+                            <div class="form-group ">
+                                <label for="username " class="col-sm-2 control-label ">Username</label>
+                                <div class="col-sm-10 ">
+                                    <input type="text" class="form-control" ng-model="lsusernamelgn" placeholder="Username ">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password " class="col-sm-2 control-label ">Password</label>
+                                <div class="col-sm-10 ">
+                                    <input type="password" class="form-control " ng-model="lspasswrdlgn" placeholder="Password ">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-sm-offset-2 col-sm-10 ">
+                                    <button type="submit " class="btn btn-default " ng-click="userlogin() ">Login in</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="alert alert-info" id="loginModalFoot">
+                            {{loginModalFoot}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- signUp Modal -->
+        <div class="modal fade " id="signupModal" role="dialog">
+            <div class="modal-dialog ">
+
+                <!-- signUp Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="signupclose" type="button" class="close " data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title ">Signup</h4>
+                    </div>
+                    <div class="modal-body ">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="username " class="col-sm-2 control-label ">Username</label>
+                                <div class="col-sm-10 ">
+                                    <input type="text" class="form-control " ng-model="lsusernamesgn" placeholder="Username ">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="col-sm-2 control-label ">Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" ng-model="lspasswrdsgn" placeholder="Password ">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-sm-offset-2 col-sm-10 ">
+                                    <button type="submit" class="btn btn-default " ng-click="usersgn()">Login in</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer ">
+                        <div class="alert alert-info" id="signupModalFoot">
+                            {{signupModalFoot}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Angular ng-messages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-messages/1.5.5/angular-messages.js "></script>
+
+
+
+    <!-- jQuery -->
+
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="javascripts/bootstrap.min.js "></script>
+    <script src="javascripts/ngStorage.min.js "></script>
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js "></script>
+    <script src="javascripts/classie.js "></script>
+    <script src="javascripts/cbpAnimatedHeader.js "></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="javascripts/jqBootstrapValidation.js "></script>
+    <script src="javascripts/contact_me.js "></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="javascripts/agency.js "></script>
+
+</body>
+
+
+
+</html>
